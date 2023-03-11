@@ -20,21 +20,29 @@ export async function getTwitterFollowerCountWithBrowser(
   username: string,
   browserContext: BrowserContext,
 ) {
-  const htmlSelector = `a[href$="/followers"]`
-  const page = await browserContext.newPage()
-  await page.goto(`https://twitter.com/${username}`)
-  await page.waitForSelector(htmlSelector)
+  const selectorFollowers = `a[href$="/followers"]`;
+  const selectorFollowing = `a[href$="/following"]`;
+  const page = await browserContext.newPage();
+  await page.goto(`https://twitter.com/${username}`);
+  await page.waitForSelector(selectorFollowers);
   const text = await page.evaluate((selector) => {
-    const text = document.querySelector(selector)!.textContent || ""
-    return text.split(" ")[0]
-  }, htmlSelector)
+    const text2 = document.querySelector(selector).textContent || "";
+    return text2.split(" ")[0];
+  }, selectorFollowers);
+  const text2 = await page.evaluate((selector) => {
+    const text2 = document.querySelector(selector).textContent || "";
+    return text2.split(" ")[0];
+  }, selectorFollowing);
+  const lastChar = text[text.length - 1].toLowerCase();
+  const times = lastChar === "m" ? 1e6 : lastChar === "k" ? 1e3 : 1;
+  const count = Number(text.replace(/[^.\d]+/g, "")) * times;
 
-  const lastChar = text[text.length - 1].toLowerCase()
-
-  const times = lastChar === "m" ? 1000000 : lastChar === "k" ? 1000 : 1
-  const count = Number(text.replace(/[^.\d]+/g, "")) * times
-
-  await page.close()
-
-  return count
+  const lastChar2 = text2[text2.length - 1].toLowerCase();
+  const times2 = lastChar2 === "m" ? 1e6 : lastChar2 === "k" ? 1e3 : 1;
+  const count2 = Number(text2.replace(/[^.\d]+/g, "")) * times2;
+  await page.close();
+  return {
+    followers: count,
+    following: count2
+  };
 }
