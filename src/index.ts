@@ -10,37 +10,37 @@ import { fetchEnhanced } from "./fetch"
 
 export type Options =
   | {
-      type: "instagram"
-      username: string
-      sessionId: string
-    }
+    type: "instagram"
+    username: string
+    sessionId: string
+  }
   | {
-      type: "youtube"
-      /** Channel ID or channel URL (https://www.youtube.com/c/CHANNEL_ID) */
-      channel: string
-    }
+    type: "youtube"
+    /** Channel ID or channel URL (https://www.youtube.com/c/CHANNEL_ID) */
+    channel: string
+  }
   | {
-      type: "tiktok"
-      username: string
-    }
+    type: "tiktok"
+    username: string
+  }
   | {
-      type: "twitter"
-      username: string
-      /**
-       * A playwright chromium browser context
-       * @example
-       * ```js
-       * import { getBrowserContext, destroyBrowser } from "follower-count"
-       * await getFollowerCount({
-       *   type: "twitter",
-       *   username: "cristiano",
-       *   browserContext: getBrowserContext({ chromiumPath: "/path/to/chromium" }),
-       * })
-       * await destroyBrowser()
-       * ```
-       */
-      browserContext?: BrowserContext
-    }
+    type: "twitter"
+    username: string
+    /**
+     * A playwright chromium browser context
+     * @example
+     * ```js
+     * import { getBrowserContext, destroyBrowser } from "follower-count"
+     * await getFollowerCount({
+     *   type: "twitter",
+     *   username: "cristiano",
+     *   browserContext: getBrowserContext({ chromiumPath: "/path/to/chromium" }),
+     * })
+     * await destroyBrowser()
+     * ```
+     */
+    browserContext?: BrowserContext
+  }
 
 export const getFollowerCount = async (options: Options): Promise<number> => {
   if (options.type === "instagram") {
@@ -58,9 +58,9 @@ export const getFollowerCount = async (options: Options): Promise<number> => {
   if (options.type === "twitter") {
     return options.browserContext
       ? getTwitterFollowerCountWithBrowser(
-          options.username,
-          options.browserContext,
-        )
+        options.username,
+        options.browserContext,
+      )
       : getTwitterFollowerCountWithEmbedApi(options.username)
   }
 
@@ -88,9 +88,21 @@ export async function getTikTokFollowerCount(username: string) {
     {},
   ).then((res) => res.text())
 
-  const m = /"authorStats":{"followerCount":(\d+),/.exec(text)
+  const authorStatsMatch = /"authorStats":\{[^}]*\}/.exec(text);
 
-  return m ? parseInt(m[1]) : 0
+  const authorStatsObject = JSON.parse(`{${authorStatsMatch[0]}}`);
+
+  const m2 = authorStatsObject.authorStats.followerCount;
+
+  const following = authorStatsObject.authorStats.followingCount
+
+  const count = authorStatsObject.authorStats.videoCount
+
+  return {
+    'followers': m2 ? parseInt(m2) : 0,
+    'following': following ? parseInt(following) : 0,
+    'count': count ? parseInt(count) : 0
+  }
 }
 
 export * from "./browser"
