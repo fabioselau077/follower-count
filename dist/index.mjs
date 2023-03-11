@@ -1436,7 +1436,11 @@ async function getYoutubeFollowerCount(channel) {
   const info = await getChannelInfo({
     channelId: getYoutubeChannelId(channel)
   });
-  return Math.floor(info.subscriberCount);
+  return {
+    "followers": Math.floor(info.subscriberCount),
+    "is_verified": info.isVerified,
+    "is_artist": info.isOfficialArtist
+  };
 }
 async function getTikTokFollowerCount(username) {
   const text = await fetchEnhanced(`https://www.tiktok.com/@${username}`, {}).then((res) => res.text());

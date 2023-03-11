@@ -78,8 +78,12 @@ export async function getYoutubeFollowerCount(channel: string) {
   const info = await getChannelInfo({
     channelId: getYoutubeChannelId(channel),
   })
-  // Not sure why subscriberCount might be a float
-  return Math.floor(info.subscriberCount)
+
+  return {
+    'followers': Math.floor(info.subscriberCount),
+    'is_verified': info.isVerified,
+    'is_artist': info.isOfficialArtist
+  }
 }
 
 export async function getTikTokFollowerCount(username: string) {
