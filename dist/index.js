@@ -67,9 +67,9 @@ var init_cjs_shims = __esm({
 var require_ponyfill_es2018 = __commonJS({
   "node_modules/.pnpm/web-streams-polyfill@3.2.1/node_modules/web-streams-polyfill/dist/ponyfill.es2018.js"(exports, module2) {
     init_cjs_shims();
-    (function (global2, factory) {
+    (function(global2, factory) {
       typeof exports === "object" && typeof module2 !== "undefined" ? factory(exports) : typeof define === "function" && define.amd ? define(["exports"], factory) : (global2 = typeof globalThis !== "undefined" ? globalThis : global2 || self, factory(global2.WebStreamsPolyfill = {}));
-    })(exports, function (exports2) {
+    })(exports, function(exports2) {
       "use strict";
       const SymbolPolyfill = typeof Symbol === "function" && typeof Symbol.iterator === "symbol" ? Symbol : (description) => `Symbol(${description})`;
       function noop2() {
@@ -281,10 +281,10 @@ var require_ponyfill_es2018 = __commonJS({
       const ErrorSteps = SymbolPolyfill("[[ErrorSteps]]");
       const CancelSteps = SymbolPolyfill("[[CancelSteps]]");
       const PullSteps = SymbolPolyfill("[[PullSteps]]");
-      const NumberIsFinite = Number.isFinite || function (x2) {
+      const NumberIsFinite = Number.isFinite || function(x2) {
         return typeof x2 === "number" && isFinite(x2);
       };
-      const MathTrunc = Math.trunc || function (v) {
+      const MathTrunc = Math.trunc || function(v) {
         return v < 0 ? Math.ceil(v) : Math.floor(v);
       };
       function isDictionary(x2) {
@@ -582,7 +582,7 @@ var require_ponyfill_es2018 = __commonJS({
       function streamAsyncIteratorBrandCheckException(name) {
         return new TypeError(`ReadableStreamAsyncIterator.${name} can only be used on a ReadableSteamAsyncIterator`);
       }
-      const NumberIsNaN = Number.isNaN || function (x2) {
+      const NumberIsNaN = Number.isNaN || function(x2) {
         return x2 !== x2;
       };
       function CreateArrayFromList(elements) {
@@ -4125,7 +4125,7 @@ async function toFormData(Body2, ct) {
   };
   const decoder = new TextDecoder("utf-8");
   decoder.decode();
-  parser.onPartBegin = function () {
+  parser.onPartBegin = function() {
     parser.onPartData = onPartData;
     parser.onPartEnd = appendEntryToFormData;
     headerField = "";
@@ -4136,13 +4136,13 @@ async function toFormData(Body2, ct) {
     filename = null;
     entryChunks.length = 0;
   };
-  parser.onHeaderField = function (ui8a) {
+  parser.onHeaderField = function(ui8a) {
     headerField += decoder.decode(ui8a, { stream: true });
   };
-  parser.onHeaderValue = function (ui8a) {
+  parser.onHeaderValue = function(ui8a) {
     headerValue += decoder.decode(ui8a, { stream: true });
   };
-  parser.onHeaderEnd = function () {
+  parser.onHeaderEnd = function() {
     headerValue += decoder.decode();
     headerField = headerField.toLowerCase();
     if (headerField === "content-disposition") {
@@ -4662,10 +4662,8 @@ Object.defineProperties(Body.prototype, {
   blob: { enumerable: true },
   json: { enumerable: true },
   text: { enumerable: true },
-  data: {
-    get: (0, import_node_util.deprecate)(() => {
-    }, "data doesn't exist, use json(), text(), arrayBuffer(), or body instead", "https://github.com/node-fetch/node-fetch/issues/1000 (response)")
-  }
+  data: { get: (0, import_node_util.deprecate)(() => {
+  }, "data doesn't exist, use json(), text(), arrayBuffer(), or body instead", "https://github.com/node-fetch/node-fetch/issues/1000 (response)") }
 });
 async function consumeBody(data) {
   if (data[INTERNALS].disturbed) {
@@ -5838,10 +5836,9 @@ var getBrowserContext = async ({
 } = {}) => {
   if (context)
     return context;
-  const awsChromium = require('chrome-aws-lambda');
   browser = await import_playwright_core.chromium.launch({
     args: ["--no-sandbox"],
-    executablePath: awsChromium.executablePath || chromiumPath || findChrome()
+    executablePath: chromiumPath || findChrome()
   });
   context = await browser.newContext(__spreadValues({}, import_playwright_core.devices["iPhone 12"]));
   return context;
